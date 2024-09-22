@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #56ccf2, #2f80ed);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        nav {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 20px;
+        }
+
+        nav a {
+            margin: 0 15px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            padding: 10px 20px;
+            border-radius: 25px;
+            background: linear-gradient(45deg, #333333, #444444, #555555);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        nav a:hover {
+            background: linear-gradient(45deg, #555555, #444444, #333333);
+            color: #ffcc00;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            width: 400px;
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: scale(1.05);
+        }
+
+        h2 {
+            text-align: center;
+            color: #2f80ed;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            box-sizing: border-box;
+            background: #f9f9f9;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2f80ed;
+        }
+
+        .btn {
+            width: 100%;
+            background: linear-gradient(to right, #56ccf2, #2f80ed);
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: linear-gradient(to right, #2f80ed, #56ccf2);
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin: 10px 0;
+            color: #555;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .register-link a {
+            color: #2f80ed;
+            text-decoration: none;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .g-recaptcha {
+            margin: 20px 0;
+        }
+
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+    </style>
+
+    <!-- Load Google reCAPTCHA API -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+    <script>
+        // Validate CAPTCHA before submitting the form
+        function validateCaptcha(event) {
+            const captchaResponse = grecaptcha.getResponse();
+            const errorMessage = document.getElementById('error-message');
+
+            // If CAPTCHA is not completed, prevent form submission
+            if (!captchaResponse) {
+                event.preventDefault();
+                errorMessage.textContent = "Please complete the reCAPTCHA to continue.";
+                return false;
+            }
+
+            errorMessage.textContent = ""; // Clear the error message if CAPTCHA is completed
+            return true; // Allow form submission
+        }
+    </script>
+</head>
+<body>
+
+<nav>
+    <a href="/home">Home</a>
+    <a href="/login">Login</a>
+    <a href="/register">Register</a>
+</nav>
+
+<div class="container">
+    <h2>Login</h2>
+
+    <!-- Error message passed from server, e.g., invalid credentials or CAPTCHA error -->
+    <% if (typeof errorMessage !== 'undefined') { %>
+        <div class="error-message"><%= errorMessage %></div>
+    <% } %>
+
+    <form action="/login" method="POST" onsubmit="validateCaptcha(event)">
+        <input type="email" name="email" placeholder="Email" required><br>
+        <input type="password" name="password" placeholder="Password" required><br>
+
+        <!-- Google reCAPTCHA widget -->
+        <div class="g-recaptcha" data-sitekey="6LcN_kgqAAAAAIto5YMzPkbk--rfiBQSu9RVhPDq"></div>
+
+        <a href="/forgot-password" class="forgot-password">Forgot Password?</a>
+        <button type="submit" class="btn">Login</button>
+    </form>
+    
+    <!-- Error message for missing CAPTCHA -->
+    <div id="error-message" class="error-message"></div>
+
+    <div class="register-link">
+        <p>Don't have an account? <a href="/register">Register</a></p>
+    </div>
+</div>
+
+</body>
+</html>

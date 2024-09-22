@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(to right, #f8ffae, #43c6ac);
+        }
+
+        nav {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px;
+        }
+
+        nav a {
+            margin: 0 15px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            padding: 10px 20px;
+            border-radius: 25px;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: background-color 0.3s ease;
+            border: 2px solid #fff;
+        }
+
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.6);
+        }
+
+        nav form {
+            display: inline;
+        }
+
+        nav form button {
+            margin-left: 15px;
+            font-size: 1.2rem;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border: 2px solid #fff;
+        }
+
+        nav form button:hover {
+            background-color: rgba(255, 255, 255, 0.6);
+        }
+
+        .content {
+            text-align: center;
+            color: #fff;
+            max-width: 600px;
+        }
+
+        .content h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .content p {
+            font-size: 1.5rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+            line-height: 1.6;
+        }
+
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/home">Home</a>
+        <% if (user) { %>
+            <form action="/logout" method="POST">
+                <button type="submit">Logout</button>
+            </form>
+        <% } else { %>
+            <a href="/login">Login</a>
+            <a href="/register">Register</a>
+        <% } %>
+    </nav>
+
+    <div class="content">
+        <% if (user) { %>
+            <h1>Welcome back, <%= user.fullname %>!</h1>
+            <p>We're glad to see you again. Feel free to explore the website.</p>
+        <% } else { %>
+            <h1>Welcome to the Website</h1>
+            <p>Your journey to seamless registration and login starts here.</p>
+        <% } %>
+    </div>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Page</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+             background: linear-gradient(to right, #ff9966, #ff5e62);  
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        
+
+        nav {
+            position: absolute;
+            top: 0;
+            right: 0px;
+            padding: 20px;
+            border: 2px solid red;
+        }
+
+        nav a {
+            margin: 0 15px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            padding: 10px 20px;
+            border-radius: 25px;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: background-color 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .container {
+            background-color:transparent;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            width: 400px;
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: scale(1.05);
+        }
+
+        h2 {
+            text-align: center;
+            color: #ff5e62;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            box-sizing: border-box;
+            background: #f9f9f9;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #ff5e62;
+        }
+
+        .password-hint {
+            font-size: 12px;
+            color: #ff5e62;
+            margin-top: 5px;
+        }
+
+        .password-strength {
+            font-size: 12px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .password-strength.strong {
+            color: green;
+        }
+
+        .btn {
+            width: 100%;
+            background: linear-gradient(to right, #ff9966, #ff5e62);
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: linear-gradient(to right, #ff5e62, #ff9966);
+        }
+
+        .g-recaptcha {
+            margin: 20px 0;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .success-message {
+            color: green;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+        }
+        .home{
+            position: absolute;
+            top: 0;
+            left: 0px;
+            padding: 20px;
+            border: 2px solid red;
+        }
+        .home a{
+            margin: 0 15px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            padding: 10px 20px;
+            border-radius: 25px;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: background-color 0.3s ease;
+
+        }
+        
+    </style>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+        function validatePasswordStrength() {
+            const password = document.getElementById("password").value;
+            const strengthText = document.getElementById("password-strength");
+            const hint = "Password must be at least 8 characters long, with 1 number, 1 uppercase letter, 1 lowercase letter, and 1 special character.";
+            
+            const strongPasswordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/;
+
+            if (password.length > 0) {
+                strengthText.style.display = "block";
+                if (strongPasswordRegex.test(password)) {
+                    strengthText.textContent = "Strength: Strong";
+                    strengthText.classList.add('strong');
+                } else {
+                    strengthText.textContent = "Strength: Weak";
+                    strengthText.classList.remove('strong');
+                }
+            } else {
+                strengthText.style.display = "none";
+            }
+
+            document.getElementById("password-hint").textContent = hint;
+        }
+
+        function validateForm(event) {
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirm-password").value;
+            const recaptchaResponse = grecaptcha.getResponse();
+
+            if (password !== confirmPassword) {
+                document.getElementById("error-message").textContent = "Passwords do not match!";
+                event.preventDefault();
+                return false;
+            }
+
+            if (recaptchaResponse.length === 0) {
+                document.getElementById("error-message").textContent = "Please complete the reCAPTCHA.";
+                event.preventDefault();
+                return false;
+            }
+
+            document.getElementById("error-message").textContent = "";
+            return true;
+        }
+    </script>
+</head>
+<body>
+ <div class="home">
+    <a href="/home">Home</a>
+ </div>
+<nav>
+    
+    <a href="/login">Login</a>
+    <a href="/register">Register</a>
+</nav>
+
+<div class="container">
+    <h2>Register</h2>
+    <% if (typeof errorMessage !== 'undefined') { %>
+        <div class="error-message"><%= errorMessage %></div>
+    <% } %>
+    <% if (typeof successMessage !== 'undefined') { %>
+        <div class="success-message"><%= successMessage %></div>
+    <% } %>
+    <form action="/register" method="POST" onsubmit="validateForm(event)">
+        <input type="text" name="fullname" placeholder="Full Name" required><br>
+        <input type="email" name="email" placeholder="Email" required><br>
+        <input type="password" id="password" name="password" placeholder="Password" oninput="validatePasswordStrength()" required>
+        <div id="password-hint" class="password-hint"></div>
+        <div id="password-strength" class="password-strength">Strength: Weak</div><br>
+        <input type="password" id="confirm-password" name="confirm-password" placeholder="Re-enter Password" required><br>
+
+        <!-- reCAPTCHA element -->
+        <div class="g-recaptcha" data-sitekey="6LcN_kgqAAAAAIto5YMzPkbk--rfiBQSu9RVhPDq"></div>
+
+        <button type="submit" class="btn">Register</button>
+    </form>
+    <div id="error-message" class="error-message"></div>
+</div>
+
+</body>
+</html>
